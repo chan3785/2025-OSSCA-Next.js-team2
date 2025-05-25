@@ -30,10 +30,10 @@ jobs:
         run: npm run lint
 
       - name: 빌드
-        run: npm build
+        run: npm run build
 
       # - name: Run tests
       #   run: npm test
 
       - name: Run Start
-        run: npm start
+        run: npm run start
