@@ -12,7 +12,7 @@ export interface 친구 {
 export const friends: 친구[] = [
   {
     id: 0,
-    이름: "Ornella Binni",
+    이름: "나",
     프로필사진:
       "https://images.unsplash.com/photo-1465869185982-5a1a7522cbcb?auto=format&fit=crop&w=300&q=80",
   },
