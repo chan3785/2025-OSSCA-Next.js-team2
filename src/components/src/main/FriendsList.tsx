@@ -9,13 +9,15 @@ export interface 친구 {
   프로필사진: string;
 }
 
+const user: 친구 = {
+  id: 0,
+  이름: "나",
+  프로필사진:
+    "https://images.unsplash.com/photo-1465869185982-5a1a7522cbcb?auto=format&fit=crop&w=300&q=80",
+};
+
 export const friends: 친구[] = [
-  {
-    id: 0,
-    이름: "나",
-    프로필사진:
-      "https://images.unsplash.com/photo-1465869185982-5a1a7522cbcb?auto=format&fit=crop&w=300&q=80",
-  },
+  user, // 가장 처음은 무조건 유저(본인)이 오도록
   {
     id: 1,
     이름: "Tom Byrom",
