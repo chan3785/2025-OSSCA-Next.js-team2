@@ -8,19 +8,30 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Plus } from "lucide-react";
+import ToDoTask from "./ToDoTask";
 
-interface Task {
-  id: number;
+export interface Task {
+  id: string;
   title: string;
   isComplete: boolean;
 }
 
 const tasks: Task[] = [
-  //   {
-  //     id: 0,
-  //     title: "Next.js 공부하기",
-  //     isComplete: false,
-  //   },
+  {
+    id: "0",
+    title: "Next.js 공부하기",
+    isComplete: false,
+  },
+  {
+    id: "1",
+    title: "Next.js 공부하기",
+    isComplete: false,
+  },
+  {
+    id: "2",
+    title: "Next.js 공부하기",
+    isComplete: false,
+  },
 ];
 
 const getFormattedDate = () => {
@@ -36,16 +47,16 @@ export default function ToDoListsDashboard() {
         <CardTitle>Today</CardTitle>
         <CardDescription>{getFormattedDate()}</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-2">
         {tasks.length > 0 ? (
-          tasks.map((task) => <div key={task.id}>todays {task.title}</div>)
+          tasks.map((task) => <ToDoTask key={task.id} task={task} />)
         ) : (
           <div className="text-center text-muted-foreground italic">
             {`Add Today's Task!`}
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex-col gap-2">
+      <CardFooter className="flex-col mt-5">
         <Button variant="outline" className="w-full">
           <Plus /> Add ToDo
         </Button>
