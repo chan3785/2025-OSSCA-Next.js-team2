@@ -10,6 +10,7 @@ import {
 import { Plus } from "lucide-react";
 import ToDoTask from "./ToDoTask";
 import { AddToDoDrawer } from "./AddToDoDrawer";
+import { DatePicker } from "./DatePicker";
 
 export interface Task {
   id: string;
@@ -35,18 +36,14 @@ const tasks: Task[] = [
   },
 ];
 
-const getFormattedDate = () => {
-  const date = new Date();
-  const days = ["일", "월", "화", "수", "목", "금", "토"];
-  return `${date.getMonth() + 1}/${date.getDate()} ${days[date.getDay()]}요일`;
-};
-
 export default function ToDoListsDashboard() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
         <CardTitle>Today</CardTitle>
-        <CardDescription>{getFormattedDate()}</CardDescription>
+        <CardDescription>
+          <DatePicker />
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         {tasks.length > 0 ? (
