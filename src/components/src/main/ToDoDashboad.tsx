@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 import ToDoTask from "./ToDoTask";
+import { AddToDoDrawer } from "./AddToDoDrawer";
 
 export interface Task {
   id: string;
@@ -57,9 +58,11 @@ export default function ToDoListsDashboard() {
         )}
       </CardContent>
       <CardFooter className="flex-col mt-5">
-        <Button variant="outline" className="w-full">
-          <Plus /> Add ToDo
-        </Button>
+        <AddToDoDrawer>
+          <Button variant="outline" className="w-full">
+            <Plus /> Add ToDo
+          </Button>
+        </AddToDoDrawer>
       </CardFooter>
     </Card>
   );
