@@ -1,3 +1,5 @@
+"use client";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -37,12 +39,14 @@ const tasks: Task[] = [
 ];
 
 export default function ToDoListsDashboard() {
+  const [상대날짜, set상대날짜] = React.useState<string>();
+
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Today</CardTitle>
+        <CardTitle>{상대날짜 ? 상대날짜 : "Today"}</CardTitle>
         <CardDescription>
-          <DatePicker />
+          <DatePicker set상대날짜={set상대날짜} />
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
