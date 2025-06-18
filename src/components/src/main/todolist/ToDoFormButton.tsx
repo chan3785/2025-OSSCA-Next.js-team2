@@ -1,28 +1,34 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { DrawerClose } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
 import { useState } from "react";
 
-export default function ToDoFormButton() {
+export default function ToDoFormButton({
+  AddTask,
+}: {
+  AddTask: (inputTitle: string) => void;
+}) {
   const [input, setInput] = useState("");
 
   const handleSubmitTodo = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await fetch("/api/todo", {
-        method: "POST",
-        body: JSON.stringify({ input }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to add todo");
-      }
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
+    AddTask(input);
+    // try {
+    //   const response = await fetch("/api/todo", {
+    //     method: "POST",
+    //     body: JSON.stringify({ input }),
+    //   });
+    //   if (!response.ok) {
+    //     throw new Error("Failed to add todo");
+    //   }
+    //   const data = await response.json();
+    //   console.log(data);
+    // } catch (error) {
+    //   console.error(error);
+    // }
   };
 
   return (
@@ -32,9 +38,11 @@ export default function ToDoFormButton() {
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />
-      <Button type="submit">
-        <Send />
-      </Button>
+      <DrawerClose asChild>
+        <Button type="submit">
+          <Send />
+        </Button>
+      </DrawerClose>
     </form>
   );
 }

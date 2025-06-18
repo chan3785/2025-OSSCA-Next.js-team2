@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +12,7 @@ import { Plus } from "lucide-react";
 import ToDoTask from "./ToDoTask";
 import { AddToDoDrawer } from "./todolist/AddToDoDrawer";
 import { DatePicker } from "./DatePicker";
+import { useState } from "react";
 
 export interface Task {
   id: string;
@@ -18,25 +20,20 @@ export interface Task {
   isComplete: boolean;
 }
 
-const tasks: Task[] = [
-  {
-    id: "0",
-    title: "Next.js 공부하기",
-    isComplete: false,
-  },
-  {
-    id: "1",
-    title: "Next.js 공부하기",
-    isComplete: false,
-  },
-  {
-    id: "2",
-    title: "Next.js 공부하기",
-    isComplete: false,
-  },
-];
-
 export default function ToDoListsDashboard() {
+  const [taskList, setTaskList] = useState<Task[]>([]);
+
+  const AddTask = (inputTitle: string) => {
+    setTaskList((prev) => [
+      ...prev,
+      {
+        id: (prev?.length + 1).toString(),
+        title: inputTitle,
+        isComplete: false,
+      },
+    ]);
+  };
+
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
@@ -46,8 +43,8 @@ export default function ToDoListsDashboard() {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        {tasks.length > 0 ? (
-          tasks.map((task) => <ToDoTask key={task.id} task={task} />)
+        {taskList.length > 0 ? (
+          taskList.map((task) => <ToDoTask key={task.id} task={task} />)
         ) : (
           <div className="text-center text-muted-foreground italic">
             {`Add Today's Task!`}
@@ -55,7 +52,7 @@ export default function ToDoListsDashboard() {
         )}
       </CardContent>
       <CardFooter className="flex-col mt-5">
-        <AddToDoDrawer>
+        <AddToDoDrawer AddTask={AddTask}>
           <Button variant="outline" className="w-full">
             <Plus /> Add ToDo
           </Button>
