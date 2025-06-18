@@ -18,11 +18,12 @@ export interface Task {
   id: string;
   title: string;
   isComplete: boolean;
+  createdAt: string;
 }
 
 export default function ToDoListsDashboard() {
   const [taskList, setTaskList] = useState<Task[]>([]);
-
+  const [date, setDate] = useState<Date>(new Date());
   const AddTask = (inputTitle: string) => {
     setTaskList((prev) => [
       ...prev,
@@ -30,6 +31,10 @@ export default function ToDoListsDashboard() {
         id: (prev?.length + 1).toString(),
         title: inputTitle,
         isComplete: false,
+        createdAt: date.toLocaleDateString("ko-KR", {
+          month: "short",
+          day: "2-digit",
+        }),
       },
     ]);
   };
@@ -39,7 +44,7 @@ export default function ToDoListsDashboard() {
       <CardHeader>
         <CardTitle>Today</CardTitle>
         <CardDescription>
-          <DatePicker />
+          <DatePicker date={date} setDate={setDate} />
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
