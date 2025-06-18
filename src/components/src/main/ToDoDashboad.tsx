@@ -13,6 +13,12 @@ import ToDoTask from "./ToDoTask";
 import { AddToDoDrawer } from "./todolist/AddToDoDrawer";
 import { DatePicker } from "./DatePicker";
 import { useState } from "react";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 
 export interface Task {
   id: string;
@@ -39,6 +45,10 @@ export default function ToDoListsDashboard() {
     ]);
   };
 
+  const DeleteTask = (id: string) => {
+    setTaskList((prev) => prev.filter((task) => task.id !== id));
+  };
+
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
@@ -49,7 +59,18 @@ export default function ToDoListsDashboard() {
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         {taskList.length > 0 ? (
-          taskList.map((task) => <ToDoTask key={task.id} task={task} />)
+          taskList.map((task) => (
+            <ContextMenu key={task.id}>
+              <ContextMenuTrigger>
+                <ToDoTask task={task} />
+              </ContextMenuTrigger>
+              <ContextMenuContent className="w-52">
+                <ContextMenuItem inset onSelect={() => DeleteTask(task.id)}>
+                  Delete
+                </ContextMenuItem>
+              </ContextMenuContent>
+            </ContextMenu>
+          ))
         ) : (
           <div className="text-center text-muted-foreground italic">
             {`Add Today's Task!`}
@@ -66,3 +87,16 @@ export default function ToDoListsDashboard() {
     </Card>
   );
 }
+
+// function ToDoContextMenu({ children }: { children: React.ReactNode }) {
+//   return (
+//     <ContextMenu>
+//       <ContextMenuTrigger>{children}</ContextMenuTrigger>
+//       <ContextMenuContent className="w-52">
+//         <ContextMenuItem inset onClick={}>
+//           Delete
+//         </ContextMenuItem>
+//       </ContextMenuContent>
+//     </ContextMenu>
+//   );
+// }
