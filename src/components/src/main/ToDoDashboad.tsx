@@ -66,7 +66,16 @@ export default function ToDoListsDashboard() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>{getRelativeDate(date)}</CardTitle>
+        <CardTitle className="flex justify-between">
+          {getRelativeDate(date)}
+          <button
+            onClick={() => {
+              console.log("saved!");
+            }}
+          >
+            Save
+          </button>
+        </CardTitle>
         <CardDescription>
           <DatePicker date={date} setDate={setDate} />
         </CardDescription>
