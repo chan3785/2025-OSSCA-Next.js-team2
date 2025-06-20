@@ -12,11 +12,9 @@ import { Button } from "@/components/ui/button";
 export function DatePicker({
   date,
   setDate,
-  set상대날짜,
 }: {
   date: Date;
   setDate: React.Dispatch<React.SetStateAction<Date>>;
-  set상대날짜: React.Dispatch<React.SetStateAction<string | undefined>>;
 }) {
   const [open, setOpen] = React.useState(false);
 
@@ -32,19 +30,6 @@ export function DatePicker({
         days[date.getDay()]
       }요일`;
     }
-  };
-
-  const getRelativeDate = (date?: Date) => {
-    if (!date) return "Today";
-    const today = new Date();
-    const diffTime = date.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return "Today";
-    if (diffDays === 1) return "Tomorrow";
-    if (diffDays === -1) return "Yesterday";
-    if (diffDays > 0) return `In ${diffDays} days`;
-    return `${Math.abs(diffDays)} days ago`;
   };
 
   return (
@@ -65,7 +50,6 @@ export function DatePicker({
                 setDate(date);
               }
               setOpen(false);
-              set상대날짜(getRelativeDate(date));
             }}
           />
         </PopoverContent>
