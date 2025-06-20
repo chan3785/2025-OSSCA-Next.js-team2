@@ -11,47 +11,80 @@ import {
 } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 import ToDoTask from "./ToDoTask";
-import { AddToDoDrawer } from "./AddToDoDrawer";
+import { AddToDoDrawer } from "./todolist/AddToDoDrawer";
 import { DatePicker } from "./DatePicker";
+import { useState } from "react";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 
 export interface Task {
   id: string;
   title: string;
   isComplete: boolean;
+  createdAt: string;
 }
 
-const tasks: Task[] = [
-  {
-    id: "0",
-    title: "Next.js 공부하기",
-    isComplete: false,
-  },
-  {
-    id: "1",
-    title: "Next.js 공부하기",
-    isComplete: false,
-  },
-  {
-    id: "2",
-    title: "Next.js 공부하기",
-    isComplete: false,
-  },
-];
-
 export default function ToDoListsDashboard() {
-  const [상대날짜, set상대날짜] = React.useState<string>();
+  const [taskList, setTaskList] = useState<Task[]>([]);
+  const [date, setDate] = useState<Date>(new Date());
+  const AddTask = (inputTitle: string) => {
+    setTaskList((prev) => [
+      ...prev,
+      {
+        id: (prev?.length + 1).toString(),
+        title: inputTitle,
+        isComplete: false,
+        createdAt: date.toLocaleDateString("ko-KR", {
+          month: "short",
+          day: "2-digit",
+        }),
+      },
+    ]);
+  };
+
+  const DeleteTask = (id: string) => {
+    setTaskList((prev) => prev.filter((task) => task.id !== id));
+  };
+
+  const getRelativeDate = (date?: Date) => {
+    if (!date) return "Today";
+    const today = new Date();
+    const diffTime = date.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return "Today";
+    if (diffDays === 1) return "Tomorrow";
+    if (diffDays === -1) return "Yesterday";
+    if (diffDays > 0) return `In ${diffDays} days`;
+    return `${Math.abs(diffDays)} days ago`;
+  };
 
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>{상대날짜 ? 상대날짜 : "Today"}</CardTitle>
+        <CardTitle>{getRelativeDate(date)}</CardTitle>
         <CardDescription>
-          <DatePicker set상대날짜={set상대날짜} />
+          <DatePicker date={date} setDate={setDate} />
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        {tasks.length > 0 ? (
-          tasks.map((task) => <ToDoTask key={task.id} task={task} />)
+        {taskList.length > 0 ? (
+          taskList.map((task) => (
+            <ContextMenu key={task.id}>
+              <ContextMenuTrigger>
+                <ToDoTask task={task} />
+              </ContextMenuTrigger>
+              <ContextMenuContent className="w-52">
+                <ContextMenuItem inset onSelect={() => DeleteTask(task.id)}>
+                  Delete
+                </ContextMenuItem>
+              </ContextMenuContent>
+            </ContextMenu>
+          ))
         ) : (
           <div className="text-center text-muted-foreground italic">
             {`Add Today's Task!`}
@@ -59,7 +92,7 @@ export default function ToDoListsDashboard() {
         )}
       </CardContent>
       <CardFooter className="flex-col mt-5">
-        <AddToDoDrawer>
+        <AddToDoDrawer AddTask={AddTask}>
           <Button variant="outline" className="w-full">
             <Plus /> Add ToDo
           </Button>
@@ -68,3 +101,16 @@ export default function ToDoListsDashboard() {
     </Card>
   );
 }
+
+// function ToDoContextMenu({ children }: { children: React.ReactNode }) {
+//   return (
+//     <ContextMenu>
+//       <ContextMenuTrigger>{children}</ContextMenuTrigger>
+//       <ContextMenuContent className="w-52">
+//         <ContextMenuItem inset onClick={}>
+//           Delete
+//         </ContextMenuItem>
+//       </ContextMenuContent>
+//     </ContextMenu>
+//   );
+// }
