@@ -1,4 +1,3 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -28,33 +27,12 @@ export interface Task {
 }
 
 export default function ToDoListsDashboard() {
-  const [taskList, setTaskList] = useState<Task[]>([]);
-  const [date, setDate] = useState<Date>(new Date());
-  const AddTask = (inputTitle: string) => {
-    setTaskList((prev) => [
-      ...prev,
-      {
-        id: (prev?.length + 1).toString(),
-        title: inputTitle,
-        isComplete: false,
-        createdAt: date.toLocaleDateString("ko-KR", {
-          month: "short",
-          day: "2-digit",
-        }),
-      },
-    ]);
-  };
-
-  const DeleteTask = (id: string) => {
-    setTaskList((prev) => prev.filter((task) => task.id !== id));
-  };
-
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Today</CardTitle>
+        <CardTitle>{상대날짜 ? 상대날짜 : "Today"}</CardTitle>
         <CardDescription>
-          <DatePicker date={date} setDate={setDate} />
+          <DatePicker />
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
