@@ -9,7 +9,7 @@ export async function getUserTodoList() {
   const todoSnap = await getDoc(todoRef);
   
   if (todoSnap.exists()) {
-    return todoSnap.data().tasks || [];
+    return todoSnap.data().tasks;
   } else {
     // 문서가 없으면 빈 배열 반환 (초기 상태)
     return [];
@@ -26,6 +26,6 @@ export async function getUserProfile() {
     if (userSnap.exists()) {
       return userSnap.data();
     } else {
-      throw new Error('유저 프로필이 존재하지 않습니다.');
+      throw new Error('유저 정보가 존재하지 않습니다.');
     }
   }
