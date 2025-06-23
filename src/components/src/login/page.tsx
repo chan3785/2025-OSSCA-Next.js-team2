@@ -57,6 +57,7 @@ export default function Login() {
           <Button
             variant={"outline"}
             className="w-full mt-5 h-10 bg-blue-500 text-white"
+            type="submit"
           >
             Log In
           </Button>
@@ -64,7 +65,7 @@ export default function Login() {
           <Button
             variant={"outline"}
             className="w-full h-10 bg-green-500 text-white"
-            type="submit"
+            onClick={() => router.push("/register")}
           >
             Sign Up
           </Button>
