@@ -1,9 +1,10 @@
 import { getUserTodoListByUid } from "@/lib/backend/read-firebase";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(request:NextRequest, { params }: { params: { uid: string } }) {
+export async function GET(request:Request, { params }: { params: Promise<{ uid: string }> }) {
   try {
-    const todolists = await getUserTodoListByUid(params.uid);
+    const {uid} = await params
+    const todolists = await getUserTodoListByUid(uid);
     return NextResponse.json(todolists);
   } catch (error) {
     const message = (error as Error).message;
