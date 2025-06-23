@@ -20,6 +20,7 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { toast } from "sonner";
 
 export interface Task {
   id: string;
@@ -65,17 +66,27 @@ export default function ToDoListsDashboard() {
     return `${Math.abs(diffDays)} days ago`;
   };
 
-  const handleSaveTodolists = () => {
+  const handleSaveTodolists = async () => {
     try {
-      fetch("api/todo", {
+      const res = await fetch("api/todo", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(taskList),
       });
+      if (res.ok) {
+        toast.success("저장 성공", {
+          description: "ToDo 리스트가 저장되었습니다.",
+        });
+      } else {
+        toast.error("저장 실패", {
+          description: "서버 오류로 저장에 실패했습니다.",
+        });
+      }
     } catch (error) {
       console.log(error);
+      toast.error("에러 발생", {
+        description: "클라이언트 오류로 저장에 실패했습니다.",
+      });
     }
   };
 
