@@ -31,13 +31,15 @@ export interface Task {
 export default function ToDoListsDashboard() {
   const [taskList, setTaskList] = useState<Task[]>([]);
   const [date, setDate] = useState<Date>(new Date());
+  const [done, setDone] = useState<boolean>(false);
+
   const AddTask = (inputTitle: string) => {
     setTaskList((prev) => [
       ...prev,
       {
         id: (prev?.length + 1).toString(),
         title: inputTitle,
-        isComplete: false,
+        isComplete: done,
         createdAt: date.toLocaleDateString("ko-KR", {
           month: "short",
           day: "2-digit",
@@ -63,18 +65,26 @@ export default function ToDoListsDashboard() {
     return `${Math.abs(diffDays)} days ago`;
   };
 
+  const handleSaveTodolists = () => {
+    try {
+      fetch("api/todo", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(taskList),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
         <CardTitle className="flex justify-between">
           {getRelativeDate(date)}
-          <button
-            onClick={() => {
-              console.log("saved!");
-            }}
-          >
-            Save
-          </button>
+          <button onClick={handleSaveTodolists}>Save</button>
         </CardTitle>
         <CardDescription>
           <DatePicker date={date} setDate={setDate} />
@@ -85,7 +95,7 @@ export default function ToDoListsDashboard() {
           taskList.map((task) => (
             <ContextMenu key={task.id}>
               <ContextMenuTrigger>
-                <ToDoTask task={task} />
+                <ToDoTask task={task} setDone={setDone} />
               </ContextMenuTrigger>
               <ContextMenuContent className="w-52">
                 <ContextMenuItem inset onSelect={() => DeleteTask(task.id)}>
@@ -110,16 +120,3 @@ export default function ToDoListsDashboard() {
     </Card>
   );
 }
-
-// function ToDoContextMenu({ children }: { children: React.ReactNode }) {
-//   return (
-//     <ContextMenu>
-//       <ContextMenuTrigger>{children}</ContextMenuTrigger>
-//       <ContextMenuContent className="w-52">
-//         <ContextMenuItem inset onClick={}>
-//           Delete
-//         </ContextMenuItem>
-//       </ContextMenuContent>
-//     </ContextMenu>
-//   );
-// }
