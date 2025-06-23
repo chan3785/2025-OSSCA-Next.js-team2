@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './firebase';
 import { writeUserData } from './write-firebase';
 import { FirebaseError } from 'firebase/app';
@@ -53,5 +53,26 @@ export async function signUpWithEmail(formData: SignUpForm) {
     );
     // 더 구체적인 에러 메시지를 반환하거나 UI에 표시할 수 있습니다.
     throw new Error(`회원가입에 실패했습니다: ${firebaseError.message}`);
+  }
+}
+
+/**
+ * 이메일과 비밀번호로 Firebase에 로그인합니다.
+ * @param email - 사용자 이메일
+ * @param password - 사용자 비밀번호
+ * @returns 로그인된 사용자 객체 (User)
+ */
+export async function signInWithEmail(email: string, password: string) {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential.user;
+  } catch (error) {
+    const firebaseError = error as FirebaseError;
+    console.error(
+      'Error signing in:',
+      firebaseError.code,
+      firebaseError.message
+    );
+    throw new Error(`로그인에 실패했습니다: ${firebaseError.message}`);
   }
 } 
