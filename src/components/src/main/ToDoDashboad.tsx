@@ -106,7 +106,7 @@ export default function ToDoListsDashboard() {
           taskList.map((task) => (
             <ContextMenu key={task.id}>
               <ContextMenuTrigger>
-                <ToDoTask task={task} setDone={setDone} />
+                <ToDoTask task={task} done={done} setDone={setDone} />
               </ContextMenuTrigger>
               <ContextMenuContent className="w-52">
                 <ContextMenuItem inset onSelect={() => DeleteTask(task.id)}>

@@ -3,9 +3,11 @@ import { Task } from "./ToDoDashboad";
 
 export default function ToDoTask({
   task,
+  done,
   setDone,
 }: {
   task: Task;
+  done: boolean;
   setDone: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   return (
@@ -16,7 +18,7 @@ export default function ToDoTask({
       </div>
       <Checkbox
         id={task.id}
-        checked={task.isComplete}
+        checked={done}
         onCheckedChange={(value) => setDone(!!value)}
         className="data-[state=checked]:border-black data-[state=checked]:bg-black data-[state=checked]:text-white dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
       />
