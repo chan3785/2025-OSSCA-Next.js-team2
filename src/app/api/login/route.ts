@@ -11,8 +11,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "이메일과 비밀번호를 모두 입력하세요." }, { status: 400 });
     }
 
-    const user = await signInWithEmail(email, password);
-    return NextResponse.json({ success: true, uid: user.uid, email: user.email });
+    await signInWithEmail(email, password);
+
+    return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ success: false, error: (error as Error).message }, { status: 401 });
   }

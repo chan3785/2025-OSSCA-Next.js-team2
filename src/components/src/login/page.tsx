@@ -2,18 +2,47 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+    try {
+      const response = await fetch("api/login", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+      if (data.success) {
+        router.push("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <main className="grid place-items-center min-h-screen bg-gray-100">
       <div className="w-full place-items-center flex-col">
         <h1 className="text-4xl text-center">NextToDo</h1>
-        <div className="grid w-full max-w-sm items-center gap-3 mt-10">
+        <form
+          className="grid w-full max-w-sm items-center gap-3 mt-10"
+          onSubmit={handleSubmit}
+        >
           <Label htmlFor="username">Username</Label>
           <Input
             type="username"
             id="username"
             placeholder="enter username"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="bg-white h-10"
           />
           <Label htmlFor="password">Password</Label>
@@ -21,6 +50,8 @@ export default function Login() {
             type="password"
             id="password"
             placeholder="enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="bg-white h-10"
           />
           <Button
@@ -33,10 +64,11 @@ export default function Login() {
           <Button
             variant={"outline"}
             className="w-full h-10 bg-green-500 text-white"
+            type="submit"
           >
             Sign Up
           </Button>
-        </div>
+        </form>
       </div>
     </main>
   );
