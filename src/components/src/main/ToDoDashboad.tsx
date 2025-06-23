@@ -20,6 +20,7 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { toast } from "sonner";
 
 export interface Task {
   id: string;
@@ -31,13 +32,15 @@ export interface Task {
 export default function ToDoListsDashboard() {
   const [taskList, setTaskList] = useState<Task[]>([]);
   const [date, setDate] = useState<Date>(new Date());
+  const [done, setDone] = useState<boolean>(false);
+
   const AddTask = (inputTitle: string) => {
     setTaskList((prev) => [
       ...prev,
       {
         id: (prev?.length + 1).toString(),
         title: inputTitle,
-        isComplete: false,
+        isComplete: done,
         createdAt: date.toLocaleDateString("ko-KR", {
           month: "short",
           day: "2-digit",
@@ -63,18 +66,36 @@ export default function ToDoListsDashboard() {
     return `${Math.abs(diffDays)} days ago`;
   };
 
+  const handleSaveTodolists = async () => {
+    try {
+      const res = await fetch("api/todo", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(taskList),
+      });
+      if (res.ok) {
+        toast.success("저장 성공", {
+          description: "ToDo 리스트가 저장되었습니다.",
+        });
+      } else {
+        toast.error("저장 실패", {
+          description: "서버 오류로 저장에 실패했습니다.",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("에러 발생", {
+        description: "클라이언트 오류로 저장에 실패했습니다.",
+      });
+    }
+  };
+
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
         <CardTitle className="flex justify-between">
           {getRelativeDate(date)}
-          <button
-            onClick={() => {
-              console.log("saved!");
-            }}
-          >
-            Save
-          </button>
+          <button onClick={handleSaveTodolists}>Save</button>
         </CardTitle>
         <CardDescription>
           <DatePicker date={date} setDate={setDate} />
@@ -85,7 +106,7 @@ export default function ToDoListsDashboard() {
           taskList.map((task) => (
             <ContextMenu key={task.id}>
               <ContextMenuTrigger>
-                <ToDoTask task={task} />
+                <ToDoTask task={task} done={done} setDone={setDone} />
               </ContextMenuTrigger>
               <ContextMenuContent className="w-52">
                 <ContextMenuItem inset onSelect={() => DeleteTask(task.id)}>
@@ -110,16 +131,3 @@ export default function ToDoListsDashboard() {
     </Card>
   );
 }
-
-// function ToDoContextMenu({ children }: { children: React.ReactNode }) {
-//   return (
-//     <ContextMenu>
-//       <ContextMenuTrigger>{children}</ContextMenuTrigger>
-//       <ContextMenuContent className="w-52">
-//         <ContextMenuItem inset onClick={}>
-//           Delete
-//         </ContextMenuItem>
-//       </ContextMenuContent>
-//     </ContextMenu>
-//   );
-// }
