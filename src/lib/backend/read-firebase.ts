@@ -16,7 +16,7 @@ export async function getUserTodoList() {
   }
 }
 
-export async function getUserProfile() {
+export async function getUserData() {
     const user = auth.currentUser;
     if (!user) throw new Error('로그인이 필요합니다.');
     

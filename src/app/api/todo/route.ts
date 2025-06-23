@@ -1,4 +1,4 @@
-import { getUserTodoList } from "@/lib/read-firebase";
+import { getUserTodoList } from "@/lib/backend/read-firebase";
 export async function GET(request:Request) {
     //fetch data from db
     const todolists = getUserTodoList()
