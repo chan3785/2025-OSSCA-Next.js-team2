@@ -1,4 +1,5 @@
 import Header from "@/components/src/header";
+import { Toaster } from "sonner";
 
 export default function MainLayout({
   children,
@@ -9,6 +10,7 @@ export default function MainLayout({
     <>
       <Header />
       {children}
+      <Toaster />
     </>
   );
 }
