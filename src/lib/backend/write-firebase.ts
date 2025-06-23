@@ -1,9 +1,8 @@
-import { doc, setDoc, arrayUnion, updateDoc } from 'firebase/firestore';
+import { doc, setDoc, arrayUnion, updateDoc, getDoc } from 'firebase/firestore';
 import db, { auth } from './firebase';
 
 // 유저 프로필 데이터 타입 (예시)
 interface UserData {
-
   email: string;
   name: string;
   profileImage: string;
@@ -50,6 +49,16 @@ export async function writeUserTodoList(tasks: Task[]) {
   try {
     const todoRef = doc(db, 'todolists', user.uid);
     await setDoc(todoRef, { tasks }); // tasks 필드에 배열 저장
+    // 저장 후 데이터 검증
+    const savedSnap = await getDoc(todoRef);
+    if (!savedSnap.exists()) {
+      throw new Error('ToDo 리스트 저장 후 데이터를 찾을 수 없습니다.');
+    }
+    const saved = savedSnap.data();
+    if (!saved.tasks || !Array.isArray(saved.tasks)) {
+      throw new Error('ToDo 리스트 저장에 실패했습니다.');
+    }
+    return saved.tasks;
   } catch (error) {
     console.error('Error writing user todolist: ', error);
     throw new Error('ToDo 리스트 저장에 실패했습니다.');
