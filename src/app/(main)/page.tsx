@@ -1,4 +1,5 @@
 import { FriendList } from "@/components/src/main/FriendsList";
+import LogOut from "@/components/src/main/LogOutButton";
 import ToDoListsDashboard from "@/components/src/main/ToDoDashboad";
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
       <article className="flex justify-center mt-5">
         <ToDoListsDashboard />
       </article>
+      <LogOut />
     </main>
   );
 }
