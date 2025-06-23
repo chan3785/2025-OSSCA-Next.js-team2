@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - develop
+      - "feature/**"
+      - "bugfix/**"
 
 jobs:
   build:
