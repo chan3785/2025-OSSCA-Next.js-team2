@@ -1,4 +1,4 @@
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, arrayUnion, updateDoc } from 'firebase/firestore';
 import db, { auth } from './firebase';
 
 // 유저 프로필 데이터 타입 (예시)
@@ -53,5 +53,25 @@ export async function writeUserTodoList(tasks: Task[]) {
   } catch (error) {
     console.error('Error writing user todolist: ', error);
     throw new Error('ToDo 리스트 저장에 실패했습니다.');
+  }
+}
+
+/**
+ * 현재 로그인된 사용자의 friendsList에 친구(상대방 uid)를 추가합니다.
+ * @param friendUid - 추가할 친구의 uid
+ */
+export async function addFriend(friendUid: string) {
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error('친구를 추가하려면 로그인이 필요합니다.');
+  }
+  try {
+    const userRef = doc(db, 'users', user.uid);
+    await updateDoc(userRef, {
+      friendsList: arrayUnion(friendUid),
+    });
+  } catch (error) {
+    console.error('Error adding friend:', error);
+    throw new Error('친구 추가에 실패했습니다.');
   }
 } 
