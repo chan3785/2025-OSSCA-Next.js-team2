@@ -9,9 +9,14 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
-export function DatePicker() {
+export function DatePicker({
+  date,
+  setDate,
+}: {
+  date: Date;
+  setDate: React.Dispatch<React.SetStateAction<Date>>;
+}) {
   const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(undefined);
 
   const getFormattedDate = (date?: Date) => {
     const days = ["일", "월", "화", "수", "목", "금", "토"];
@@ -41,7 +46,9 @@ export function DatePicker() {
             selected={date}
             captionLayout="dropdown"
             onSelect={(date) => {
-              setDate(date);
+              if (date) {
+                setDate(date);
+              }
               setOpen(false);
             }}
           />
