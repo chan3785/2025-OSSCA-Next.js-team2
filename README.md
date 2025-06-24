@@ -21,7 +21,8 @@
 
 ### 👾 시스템 아키텍처 (Architecture)
 
-![시스템 아키텍처](./system-architecture.png)
+![image](https://github.com/user-attachments/assets/2edf992d-3d6f-4264-a049-8cf08e1374dc)
+
 
 - **Browser(User):** 사용자가 브라우저에서 서비스에 접근합니다.
 - **Next.js:**
