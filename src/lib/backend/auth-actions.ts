@@ -36,6 +36,7 @@ export async function signUpWithEmail(formData: SignUpForm) {
     // 3. Firestore의 'users' 컬렉션에 사용자 데이터 저장은 별도의 API Route에서 처리
     // 회원가입 성공 후 idToken을 받아 API Route로 전송
     const idToken = await user.getIdToken();
+    document.cookie = `firebase-token=${idToken}; path=/; max-age=86400`;
     await fetch('/api/user', {
       method: 'POST',
       headers: {

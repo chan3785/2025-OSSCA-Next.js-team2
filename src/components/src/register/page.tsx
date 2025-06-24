@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { signUpWithEmail } from "@/lib/backend/auth-actions";
 import { getRandomProfileImage } from "@/lib/profile-images";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 export default function Register() {
@@ -17,7 +18,7 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const router = useRouter();
   useEffect(() => {
     // 클라이언트 사이드에서만 랜덤 이미지 선택
     setProfileImageURL(getRandomProfileImage().src);
@@ -58,7 +59,9 @@ export default function Register() {
     }
 
     try {
-      signUpWithEmail({ email, password, username, imageUrl });
+      signUpWithEmail({ email, password, username, imageUrl }).then(() => {
+        router.push("/");
+      });
     } catch (error) {
       console.error(error);
       console.log("회원가입 실패");
@@ -128,6 +131,7 @@ export default function Register() {
           <Button
             variant={"outline"}
             className="w-full h-10 bg-blue-500 text-white"
+            onClick={() => router.push("/login")}
           >
             Log In
           </Button>
