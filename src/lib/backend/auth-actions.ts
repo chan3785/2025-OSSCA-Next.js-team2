@@ -66,7 +66,7 @@ export async function signInWithEmail(email: string, password: string) {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const idToken = await userCredential.user.getIdToken();
-    document.cookie = `token=${idToken}; path=/; max-age=86400`;
+    document.cookie = `firebase-token=${idToken}; path=/; max-age=86400`;
     return userCredential.user;
   } catch (error) {
     const firebaseError = error as FirebaseError;

@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server'
 
 // 인증이 필요 없는 경로 목록
 const PUBLIC_PATHS = ['/login', '/register', '/api'];
@@ -17,12 +18,13 @@ export function middleware(request: NextRequest) {
 
   // (main) 경로만 보호
   if (pathname.startsWith('/')) {
-    const token = request.cookies.get('token');
+    const token = request.cookies.get('firebase-token');
     if (!token) {
       // 인증 없으면 로그인 페이지로 리다이렉트
       const loginUrl = new URL('/login', request.url);
       return NextResponse.redirect(loginUrl);
     }
+    
   }
 
   // 그 외는 통과
@@ -32,6 +34,7 @@ export function middleware(request: NextRequest) {
 // 미들웨어가 적용될 경로 설정
 export const config = {
   matcher: [
-    '/(main)/:path*', // (main) 이하 모든 경로에 적용
+    //'/(main)/:path*', // (main) 이하 모든 경로에 적용
+    '/((?!api|_next/static|_next/image|favicon.ico|login|register).*)',
   ],
 }; 
