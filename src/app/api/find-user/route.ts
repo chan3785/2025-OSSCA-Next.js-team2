@@ -1,27 +1,34 @@
-import { NextRequest, NextResponse } from "next/server";
+import { collection, query, orderBy, startAt, endAt, getDocs } from "firebase/firestore";
 import db from "@/lib/backend/firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
-  const email = formData.get("email") as string | null;
   const name = formData.get("name") as string | null;
 
-  if (!email && !name) {
-    return NextResponse.json({ error: "email 또는 name 중 하나는 필요합니다." }, { status: 400 });
+  if (!name) {
+    return NextResponse.json({ error: "이름을 입력하세요" }, { status: 400 });
   }
 
-  let q;
-  if (email) {
-    q = query(collection(db, "users"), where("email", "==", email));
-  } else {
-    q = query(collection(db, "users"), where("name", "==", name));
-  }
+  const usersRef = collection(db, "users");
+
+  const q = query(
+    usersRef,
+    orderBy("name"),
+    startAt(name),
+    endAt(name + "\uf8ff"), // 유니코드 트릭
+  );
 
   const snapshot = await getDocs(q);
+
   if (snapshot.empty) {
-    return NextResponse.json({ error: "해당 조건의 사용자가 없습니다." }, { status: 404 });
+    return NextResponse.json([], { status: 200 });
   }
-  const userDoc = snapshot.docs[0];
-  return NextResponse.json({ uid: userDoc.id, ...userDoc.data() });
-} 
+
+  const results = snapshot.docs.map((doc) => ({
+    uid: doc.id,
+    ...doc.data(),
+  }));
+
+  return NextResponse.json(results);
+}
