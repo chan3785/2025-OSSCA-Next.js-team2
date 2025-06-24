@@ -1,23 +1,22 @@
 import { createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './firebase';
-import { writeUserData } from './write-firebase';
 import { FirebaseError } from 'firebase/app';
 
 interface SignUpForm {
   email: string;
   password: string;
-  name: string;
-  profileImage?: string;
+  username: string;
+  imageUrl?: string;
 }
 
 /**
- * 이메일, 비밀번호, 이름, 프로필 이미지로 Firebase에 새 사용자를 생성하고,
- * Firestore에 사용자 프로필 데이터를 저장합니다.
- * @param formData - email, password, name, profileImage를 포함하는 객체
+ * 이메일, 비밀번호, 이름, 프로필 이미지로 Firebase에 새 사용자를 생성합니다.
+ * Firestore에 유저 데이터 저장은 별도의 API Route(/api/user)에서 처리합니다.
+ * @param formData - email, password, username, imageUrl를 포함하는 객체
  * @returns 생성된 사용자 객체 (User)
  */
 export async function signUpWithEmail(formData: SignUpForm) {
-  const { email, password, name, profileImage } = formData;
+  const { email, password, username, imageUrl } = formData;
 
   try {
     // 1. Firebase Auth에 사용자 생성
@@ -30,16 +29,24 @@ export async function signUpWithEmail(formData: SignUpForm) {
 
     // 2. 생성된 사용자의 프로필 업데이트 (이름, 프로필 이미지 URL)
     await updateProfile(user, {
-      displayName: name,
-      photoURL: profileImage ? profileImage : "",
+      displayName: username,
+      photoURL: imageUrl ? imageUrl : "",
     });
 
-    // 3. Firestore의 'users' 컬렉션에 사용자 데이터 저장
-    await writeUserData({
-      email: user.email!,
-      name: user.displayName!,
-      profileImage: user.photoURL!,
-      friendsList: [], // 초기 친구 목록은 비어있음
+    // 3. Firestore의 'users' 컬렉션에 사용자 데이터 저장은 별도의 API Route에서 처리
+    // 회원가입 성공 후 idToken을 받아 API Route로 전송
+    const idToken = await user.getIdToken();
+    await fetch('/api/user', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${idToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: user.email,
+        name: user.displayName,
+        profileImage: user.photoURL,
+      }),
     });
 
     return user;
