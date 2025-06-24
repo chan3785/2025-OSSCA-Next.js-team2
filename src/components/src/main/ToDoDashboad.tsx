@@ -30,8 +30,12 @@ export interface Task {
   createdAt: string;
 }
 
-export default function ToDoListsDashboard() {
-  const [taskList, setTaskList] = useState<Task[]>([]);
+export default function ToDoListsDashboard({
+  initialTasks,
+}: {
+  initialTasks: Task[];
+}) {
+  const [taskList, setTaskList] = useState<Task[]>(initialTasks);
   const [date, setDate] = useState<Date>(new Date());
   const [done, setDone] = useState<boolean>(false);
   const user = auth.currentUser;
