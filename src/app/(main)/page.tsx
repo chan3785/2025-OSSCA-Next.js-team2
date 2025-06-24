@@ -1,52 +1,24 @@
-"use client";
-
-import { useFriendSearch } from "@/contexts/FriendSearchContext";
-import FriendSearchResults from "@/components/src/friends/FriendSearchResults";
-import { FriendList } from "@/components/src/main/FriendsList";
-import ToDoListsDashboard from "@/components/src/main/ToDoDashboad";
 import { cookies } from "next/headers";
-import { getUserTodoList } from "@/lib/backend/read-firebase";
-
-async function fetchTodos() {
-  const cookieStore = await cookies();
-  const idToken = cookieStore.get("firebase-token")?.value;
-  if (!idToken) return [];
-
-  try {
-    return await getUserTodoList(idToken);
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
-import LogOut from "@/components/src/main/LogOutButton";
+import { getUserData, getUserTodoList, getUserFriendsFromList } from "@/lib/backend/read-firebase";
+import HomeClient from "@/components/src/main/HomeClient";
 
 export default async function Home() {
-  const Tasks = await fetchTodos();
-  const { keyword, results } = useFriendSearch();
+  const cookieStore = cookies();
+  const idToken = cookieStore.get("firebase-token")?.value;
+  if (!idToken) return <div>로그인이 필요합니다.</div>;
 
-  const handleAddFriend = async (uid: string) => {
-    const formData = new FormData();
-    formData.append("friendUid", uid);
-    await fetch("/api/friend", {
-      method: "POST",
-      body: formData,
-    });
+  const userData = await getUserData(idToken);
+  const tasks = await getUserTodoList(idToken);
+  const friendUids = Array.isArray(userData.friendsList) ? userData.friendsList : [];
+
+  const friends = await getUserFriendsFromList(friendUids);
+
+  const user = {
+    id: userData.uid,
+    name: userData.name ?? "나",
+    profileImage: userData.profileImage ?? null,
+    friendsList: friendUids,
   };
 
-  return (
-    <main className="w-full p-4 space-y-6">
-      {keyword.trim() ? (
-        <FriendSearchResults results={results} onAdd={handleAddFriend} />
-      ) : (
-        <>
-          <FriendList className="w-11/12 ml-6 border-transparent" />
-          <article className="flex justify-center mt-5">
-            <ToDoListsDashboard initialTasks={Tasks} />
-          </article>
-        </>
-      )}
-      <LogOut />
-    </main>
-  );
+  return <HomeClient user={user} friends={friends} initialTasks={tasks} />;
 }
