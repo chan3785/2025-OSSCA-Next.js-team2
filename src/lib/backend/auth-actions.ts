@@ -6,8 +6,8 @@ import { FirebaseError } from 'firebase/app';
 interface SignUpForm {
   email: string;
   password: string;
-  name: string;
-  profileImage?: string;
+  username: string;
+  imageUrl?: string;
 }
 
 /**
@@ -17,7 +17,7 @@ interface SignUpForm {
  * @returns 생성된 사용자 객체 (User)
  */
 export async function signUpWithEmail(formData: SignUpForm) {
-  const { email, password, name, profileImage } = formData;
+  const { email, password, username, imageUrl } = formData;
 
   try {
     // 1. Firebase Auth에 사용자 생성
@@ -30,8 +30,8 @@ export async function signUpWithEmail(formData: SignUpForm) {
 
     // 2. 생성된 사용자의 프로필 업데이트 (이름, 프로필 이미지 URL)
     await updateProfile(user, {
-      displayName: name,
-      photoURL: profileImage ? profileImage : "",
+      displayName: username,
+      photoURL: imageUrl ? imageUrl : "",
     });
 
     // 3. Firestore의 'users' 컬렉션에 사용자 데이터 저장

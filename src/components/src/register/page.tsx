@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { signUpWithEmail } from "@/lib/backend/auth-actions";
 import { getRandomProfileImage } from "@/lib/profile-images";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -56,17 +57,8 @@ export default function Register() {
       }
     }
 
-    const formData = new FormData();
-    formData.append("profileImage", imageUrl);
-    formData.append("email", email);
-    formData.append("name", username);
-    formData.append("password", password);
-
     try {
-      fetch("api/register", {
-        method: "POST",
-        body: formData,
-      });
+      signUpWithEmail({ email, password, username, imageUrl });
     } catch (error) {
       console.error(error);
       console.log("회원가입 실패");
