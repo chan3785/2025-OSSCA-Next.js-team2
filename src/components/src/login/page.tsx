@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { signInWithEmail } from "@/lib/backend/auth-actions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -12,16 +13,13 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
     try {
-      const response = await fetch("api/login", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
-      if (data.success) {
+      if (!email || !password) {
+        return console.log("이메일과 비밀번호를 모두 입력하세요.");
+      }
+
+      const user = await signInWithEmail(email, password);
+      if (user) {
         router.push("/");
       }
     } catch (error) {
