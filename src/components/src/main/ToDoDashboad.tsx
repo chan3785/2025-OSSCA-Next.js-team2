@@ -21,6 +21,7 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { toast } from "sonner";
+import { auth } from "@/lib/backend/firebase";
 
 export interface Task {
   id: string;
@@ -33,6 +34,7 @@ export default function ToDoListsDashboard() {
   const [taskList, setTaskList] = useState<Task[]>([]);
   const [date, setDate] = useState<Date>(new Date());
   const [done, setDone] = useState<boolean>(false);
+  const user = auth.currentUser;
 
   const AddTask = (inputTitle: string) => {
     setTaskList((prev) => [
@@ -67,10 +69,14 @@ export default function ToDoListsDashboard() {
   };
 
   const handleSaveTodolists = async () => {
+    const idToken = await user?.getIdToken();
     try {
       const res = await fetch("api/todo", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(taskList),
       });
       if (res.ok) {

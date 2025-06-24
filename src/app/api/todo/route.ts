@@ -27,6 +27,7 @@ export async function PUT(request: NextRequest) {
   }
   try {
     const todolists = await request.json();
+    console.log(idToken)
     await writeUserTodoList(idToken, todolists);
     return NextResponse.json({ success: true });
   } catch (error) {
