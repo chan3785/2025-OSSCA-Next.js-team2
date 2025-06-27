@@ -1,5 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { Task } from "./ToDoDashboad";
+import { Task } from "@/lib/type/interface";
 
 export default function ToDoTask({
   task,
