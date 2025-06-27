@@ -1,14 +1,8 @@
+import { UserData } from '../type/interface';
 import adminDb, { adminAuth } from './firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 
-// 유저 프로필 데이터 타입 (예시)
-export interface UserData {
-  email: string;
-  name: string;
-  profileImage: string | null;
-  friendsList: string[];
-}
-export type UserWithId = UserData & { id: string };
+
 
 // 할 일(Task) 데이터 타입 (예시)
 interface Task {
