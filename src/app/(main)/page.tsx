@@ -5,6 +5,13 @@ import {
   getUserFriendsFromList,
 } from "@/lib/backend/read-firebase";
 import HomeClient from "@/components/src/main/HomeClient";
+import { UserWithId } from "@/lib/backend/write-firebase";
+
+export interface friendsProps {
+  id: string;
+  name: string;
+  profileImage: string | null;
+}
 
 export default async function Home() {
   const cookieStore = await cookies();
@@ -25,7 +32,7 @@ export default async function Home() {
     name: userData.name ?? "나",
     profileImage: userData.profileImage ?? null,
     friendsList: friendUids,
-  };
+  } as UserWithId;
 
   return <HomeClient user={user} friends={friends} initialTasks={tasks} />;
 }

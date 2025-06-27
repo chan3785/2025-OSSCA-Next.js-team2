@@ -29,7 +29,7 @@ export default function FriendSearchResults({
     (user) =>
       user.uid !== currentUserUid &&
       !currentFriends.includes(user.uid) &&
-      !hidden.includes(user.uid),
+      !hidden.includes(user.uid)
   );
 
   const handleAdd = (uid: string) => {
@@ -39,7 +39,9 @@ export default function FriendSearchResults({
 
   if (visibleResults.length === 0) {
     return (
-      <p className="text-center text-sm text-muted-foreground">추가할 수 있는 사용자가 없습니다.</p>
+      <p className="text-center text-sm text-muted-foreground">
+        추가할 수 있는 사용자가 없습니다.
+      </p>
     );
   }
 
