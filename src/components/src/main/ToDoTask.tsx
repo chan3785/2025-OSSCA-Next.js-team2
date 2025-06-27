@@ -1,14 +1,12 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { Task } from "./ToDoDashboad";
+import { Task } from "@/lib/type/interface";
 
 export default function ToDoTask({
   task,
-  done,
-  setDone,
+  onDoneChange,
 }: {
   task: Task;
-  done: boolean;
-  setDone: React.Dispatch<React.SetStateAction<boolean>>;
+  onDoneChange: (id: string, done: boolean) => void;
 }) {
   return (
     <div className="flex justify-between items-start gap-3 rounded-lg border p-3 has-[[aria-checked=true]]:bg-accent has-[[aria-checked=true]]:text-muted-foreground dark:has-[[aria-checked=true]]:border-blue-900 dark:has-[[aria-checked=true]]:bg-blue-950">
@@ -18,8 +16,8 @@ export default function ToDoTask({
       </div>
       <Checkbox
         id={task.id}
-        checked={done}
-        onCheckedChange={(value) => setDone(!!value)}
+        checked={task.isComplete}
+        onCheckedChange={(value) => onDoneChange(task.id, !!value)}
         className="data-[state=checked]:border-black data-[state=checked]:bg-black data-[state=checked]:text-white dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
       />
     </div>

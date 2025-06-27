@@ -21,18 +21,26 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { toast } from "sonner";
+import { auth } from "@/lib/backend/firebase";
+import { Task } from "@/lib/type/interface";
 
-export interface Task {
-  id: string;
-  title: string;
-  isComplete: boolean;
-  createdAt: string;
-}
-
-export default function ToDoListsDashboard() {
-  const [taskList, setTaskList] = useState<Task[]>([]);
+export default function ToDoListsDashboard({
+  initialTasks,
+}: {
+  initialTasks: Task[];
+}) {
+  const [taskList, setTaskList] = useState<Task[]>(initialTasks);
   const [date, setDate] = useState<Date>(new Date());
-  const [done, setDone] = useState<boolean>(false);
+
+  const handleTaskDoneChange = (taskId: string, newDoneState: boolean) => {
+    setTaskList((prevTaskList) =>
+      prevTaskList.map((task) =>
+        task.id === taskId ? { ...task, isComplete: newDoneState } : task
+      )
+    );
+    // TODO: DB 업데이트 API 호출 로직 추가
+  };
+  const user = auth.currentUser;
 
   const AddTask = (inputTitle: string) => {
     setTaskList((prev) => [
@@ -40,7 +48,7 @@ export default function ToDoListsDashboard() {
       {
         id: (prev?.length + 1).toString(),
         title: inputTitle,
-        isComplete: done,
+        isComplete: false,
         createdAt: date.toLocaleDateString("ko-KR", {
           month: "short",
           day: "2-digit",
@@ -67,10 +75,14 @@ export default function ToDoListsDashboard() {
   };
 
   const handleSaveTodolists = async () => {
+    const idToken = await user?.getIdToken();
     try {
       const res = await fetch("api/todo", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(taskList),
       });
       if (res.ok) {
@@ -106,7 +118,7 @@ export default function ToDoListsDashboard() {
           taskList.map((task) => (
             <ContextMenu key={task.id}>
               <ContextMenuTrigger>
-                <ToDoTask task={task} done={done} setDone={setDone} />
+                <ToDoTask task={task} onDoneChange={handleTaskDoneChange} />
               </ContextMenuTrigger>
               <ContextMenuContent className="w-52">
                 <ContextMenuItem inset onSelect={() => DeleteTask(task.id)}>
