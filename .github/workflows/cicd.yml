@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main
-      - "releases/**"
+      - develop
+      - "feature/**"
+      - "bugfix/**"
 
 jobs:
   build:
@@ -12,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [22.x, 23.x]
+        node-version: [22.x]
 
     steps:
       - name: Check out repository code
