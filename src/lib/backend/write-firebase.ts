@@ -3,7 +3,6 @@ import adminDb, { adminAuth } from './firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 
 
-
 // 할 일(Task) 데이터 타입 (예시)
 interface Task {
   id: string;
