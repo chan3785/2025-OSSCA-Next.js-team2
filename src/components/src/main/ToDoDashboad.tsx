@@ -22,13 +22,7 @@ import {
 } from "@/components/ui/context-menu";
 import { toast } from "sonner";
 import { auth } from "@/lib/backend/firebase";
-
-export interface Task {
-  id: string;
-  title: string;
-  isComplete: boolean;
-  createdAt: string;
-}
+import { Task } from "@/lib/type/interface";
 
 export default function ToDoListsDashboard({
   initialTasks,

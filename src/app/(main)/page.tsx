@@ -5,7 +5,7 @@ import {
   getUserFriendsFromList,
 } from "@/lib/backend/read-firebase";
 import HomeClient from "@/components/src/main/HomeClient";
-import { UserWithId } from "@/lib/backend/write-firebase";
+import { UserWithId } from "@/lib/type/interface";
 
 export interface friendsProps {
   id: string;
