@@ -3,10 +3,22 @@
 import { useFriendSearch } from "@/contexts/FriendSearchContext";
 import FriendSearchResults from "@/components/src/friends/FriendSearchResults";
 import { FriendList } from "@/components/src/main/FriendsList";
-import ToDoListsDashboard from "@/components/src/main/ToDoDashboad";
+import ToDoListsDashboard, { Task } from "@/components/src/main/ToDoDashboad";
 import LogOut from "@/components/src/main/LogOutButton";
+import { UserWithId } from "@/lib/backend/write-firebase";
+import { friendsProps } from "@/app/(main)/page";
 
-export default function HomeClient({ initialTasks, user, friends }) {
+interface HomeClientProps {
+  initialTasks: Task[];
+  user: UserWithId;
+  friends: friendsProps[];
+}
+
+export default function HomeClient({
+  initialTasks,
+  user,
+  friends,
+}: HomeClientProps) {
   const { keyword, results } = useFriendSearch();
 
   const handleAddFriend = async (uid: string) => {
