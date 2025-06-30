@@ -81,6 +81,7 @@ src/
 
 ---
 
+## 🛠️ 앞으로 업데이트할 기능 (Upcoming Features)
 1. **친구 투두 조회 기능 추가**
    - 친구의 UID를 통해 해당 사용자의 할 일(ToDo) 리스트를 조회할 수 있는 기능을 UI에 추가할 예정입니다.
 2. **로그인, 회원가입 후 로딩 인터페이스 추가**
@@ -106,5 +107,4 @@ npm run dev
 # git flow 구현
 > https://danielkummer.github.io/git-flow-cheatsheet/index.ko_KR.html
 
-## 🛠️ 앞으로 업데이트할 기능 (Upcoming Features)
 
